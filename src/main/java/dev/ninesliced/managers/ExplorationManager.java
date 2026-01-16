@@ -1,6 +1,8 @@
-package dev.ninesliced.exploration;
+package dev.ninesliced.managers;
 
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import dev.ninesliced.configs.ExplorationPersistence;
+import dev.ninesliced.exploration.ExplorationTracker;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;

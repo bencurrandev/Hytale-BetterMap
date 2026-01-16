@@ -1,4 +1,4 @@
-package dev.ninesliced.exploration;
+package dev.ninesliced.utils;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;

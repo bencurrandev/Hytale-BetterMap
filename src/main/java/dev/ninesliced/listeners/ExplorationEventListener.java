@@ -1,4 +1,4 @@
-package dev.ninesliced.exploration;
+package dev.ninesliced.listeners;
 
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.server.core.entity.entities.Player;
@@ -13,6 +13,10 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.WorldMapTracker;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
+import dev.ninesliced.exploration.*;
+import dev.ninesliced.managers.ExplorationManager;
+import dev.ninesliced.utils.ReflectionHelper;
+import dev.ninesliced.utils.WorldMapHook;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;

@@ -7,7 +7,11 @@ import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.ninesliced.commands.BetterMapCommand;
+import dev.ninesliced.components.ExplorationComponent;
+import dev.ninesliced.configs.BetterMapConfig;
 import dev.ninesliced.exploration.*;
+import dev.ninesliced.listeners.ExplorationEventListener;
+import dev.ninesliced.managers.ExplorationManager;
 
 import javax.annotation.Nonnull;
 import java.util.logging.Logger;

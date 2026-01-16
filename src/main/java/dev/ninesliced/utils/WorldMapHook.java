@@ -1,4 +1,4 @@
-package dev.ninesliced.exploration;
+package dev.ninesliced.utils;
 
 import com.hypixel.hytale.math.iterator.CircleSpiralIterator;
 import com.hypixel.hytale.protocol.Packet;
@@ -12,7 +12,9 @@ import com.hypixel.hytale.server.core.universe.world.worldmap.WorldMapSettings;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.ninesliced.BetterMapConfig;
+import dev.ninesliced.configs.BetterMapConfig;
+import dev.ninesliced.exploration.ExplorationTracker;
+import dev.ninesliced.managers.MapExpansionManager;
 
 import javax.annotation.Nonnull;
 import java.util.*;

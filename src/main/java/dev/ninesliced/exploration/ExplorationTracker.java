@@ -1,6 +1,8 @@
 package dev.ninesliced.exploration;
 
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import dev.ninesliced.components.ExplorationComponent;
+import dev.ninesliced.managers.MapExpansionManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

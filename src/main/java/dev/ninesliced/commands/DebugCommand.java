@@ -6,7 +6,7 @@ import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgumentType;
-import dev.ninesliced.BetterMapConfig;
+import dev.ninesliced.configs.BetterMapConfig;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -4,8 +4,8 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.AbstractCommand;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.universe.Universe;
-import dev.ninesliced.BetterMapConfig;
-import dev.ninesliced.exploration.WorldMapHook;
+import dev.ninesliced.configs.BetterMapConfig;
+import dev.ninesliced.utils.WorldMapHook;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 

@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.WorldMapTracker;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.ninesliced.utils.WorldMapHook;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.Executors;

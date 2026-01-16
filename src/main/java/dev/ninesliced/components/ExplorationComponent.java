@@ -1,4 +1,4 @@
-package dev.ninesliced.exploration;
+package dev.ninesliced.components;
 
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;

@@ -1,4 +1,4 @@
-package dev.ninesliced;
+package dev.ninesliced.configs;
 
 import com.google.gson.*;
 
@@ -117,9 +117,9 @@ public class BetterMapConfig {
         setLoggerLevel("dev.ninesliced.commands", level);
         setLoggerLevel("dev.ninesliced.exploration", level);
 
-        setLoggerLevel("dev.ninesliced.exploration.ExplorationEventListener", level);
-        setLoggerLevel("dev.ninesliced.exploration.WorldMapHook", level);
-        setLoggerLevel("dev.ninesliced.exploration.ExplorationPersistence", level);
+        setLoggerLevel("dev.ninesliced.listeners.ExplorationEventListener", level);
+        setLoggerLevel("dev.ninesliced.utils.WorldMapHook", level);
+        setLoggerLevel("dev.ninesliced.configs.ExplorationPersistence", level);
     }
 
     private void setLoggerLevel(String loggerName, Level level) {

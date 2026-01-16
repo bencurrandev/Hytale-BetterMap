@@ -9,8 +9,8 @@ import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgumentType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.World;
-import dev.ninesliced.BetterMapConfig;
-import dev.ninesliced.exploration.WorldMapHook;
+import dev.ninesliced.configs.BetterMapConfig;
+import dev.ninesliced.utils.WorldMapHook;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

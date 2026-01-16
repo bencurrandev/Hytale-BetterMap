@@ -1,4 +1,7 @@
-package dev.ninesliced.exploration;
+package dev.ninesliced.managers;
+
+import dev.ninesliced.exploration.ExploredChunksTracker;
+import dev.ninesliced.utils.ChunkUtil;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
