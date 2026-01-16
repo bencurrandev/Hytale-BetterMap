@@ -45,7 +45,7 @@ This plugin includes a full suite of commands for players and admins to manage m
 
 
 * `/bettermap max <value>`
-* **Description:** Sets the maximum zoom scale (how close you can zoom in). Higher values allow for closer inspection.
+* **Description:** Sets the maximum zoom scale (how close you can zoom in). Higher values allow for closer inspection. The default maximum zoom in base hytale is 256.
 * **Permission:** `command.bettermap.max`
 
 
