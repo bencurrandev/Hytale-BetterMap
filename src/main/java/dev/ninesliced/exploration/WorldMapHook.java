@@ -9,6 +9,9 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.WorldMapTracker;
 import com.hypixel.hytale.server.core.universe.world.worldmap.WorldMapSettings;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.ninesliced.BetterMapConfig;
 
 import javax.annotation.Nonnull;
@@ -185,10 +188,20 @@ public class WorldMapHook {
                     null,
                     null
             );
-            player.getPlayerConnection().write((Packet) packet);
+            sendPacket(player, (Packet) packet);
 
         } catch (Exception e) {
             LOGGER.warning("Failed to manage loaded chunks: " + e.getMessage());
+        }
+    }
+
+    private static void sendPacket(Player player, Packet packet) {
+        Ref<EntityStore> ref = player.getReference();
+        if (ref != null && ref.isValid()) {
+            PlayerRef playerRef = ref.getStore().getComponent(ref, PlayerRef.getComponentType());
+            if (playerRef != null) {
+                playerRef.getPacketHandler().write(packet);
+            }
         }
     }
 
@@ -250,7 +263,7 @@ public class WorldMapHook {
             UpdateWorldMapSettings packet = (UpdateWorldMapSettings) ReflectionHelper.getFieldValue(settings, "settingsPacket");
 
             if (packet != null) {
-                player.getPlayerConnection().write((Packet) packet);
+                sendPacket(player, (Packet) packet);
                 LOGGER.fine("Sent custom map settings to " + player.getDisplayName());
             }
         } catch (Exception e) {
@@ -377,7 +390,7 @@ public class WorldMapHook {
 
                         if (!toRemovePackets.isEmpty()) {
                             UpdateWorldMap packet = new UpdateWorldMap(toRemovePackets.toArray(new MapChunk[0]), null, null);
-                            tracker.getPlayer().getPlayerConnection().write((Packet) packet);
+                            sendPacket(tracker.getPlayer(), (Packet) packet);
                         }
                     }
                 }

@@ -1,6 +1,9 @@
 package dev.ninesliced.exploration;
 
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
 
 import javax.annotation.Nonnull;
 import java.io.*;
@@ -34,8 +37,11 @@ public class ExplorationPersistence {
     }
 
     public void load(@Nonnull Player player, @Nonnull String worldName) {
-        UUID playerUUID = player.getUuid();
-        if (playerUUID == null) return;
+        Ref<EntityStore> ref = player.getReference();
+        if (ref == null || !ref.isValid()) return;
+        UUIDComponent uuidComp = ref.getStore().getComponent(ref, UUIDComponent.getComponentType());
+        if (uuidComp == null) return;
+        UUID playerUUID = uuidComp.getUuid();
 
         Path worldDir = storageDir.resolve(worldName);
         Path file = worldDir.resolve(playerUUID.toString() + ".bin");
@@ -75,7 +81,13 @@ public class ExplorationPersistence {
     }
 
     public void save(@Nonnull Player player) {
-        save(player.getDisplayName(), player.getUuid(), player.getWorld().getName());
+        Ref<EntityStore> ref = player.getReference();
+        if (ref != null && ref.isValid()) {
+            UUIDComponent uuidComp = ref.getStore().getComponent(ref, UUIDComponent.getComponentType());
+            if (uuidComp != null) {
+                save(player.getDisplayName(), uuidComp.getUuid(), player.getWorld().getName());
+            }
+        }
     }
 
     public void save(String playerName, UUID playerUUID, @Nonnull String worldName) {

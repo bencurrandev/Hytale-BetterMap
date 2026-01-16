@@ -12,8 +12,10 @@ import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.WorldMapTracker;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class ExplorationEventListener {
@@ -85,7 +87,8 @@ public class ExplorationEventListener {
                 }
 
                 if (isDefaultWorld(world)) {
-                    ExplorationManager.getInstance().savePlayerData(player.getDisplayName(), player.getUuid(), worldName);
+                    UUID uuid = holder.getComponent(UUIDComponent.getComponentType()).getUuid();
+                    ExplorationManager.getInstance().savePlayerData(player.getDisplayName(), uuid, worldName);
                 }
 
                 LOGGER.info("[DEBUG] Clearing exploration data for " + player.getDisplayName());
@@ -128,7 +131,8 @@ public class ExplorationEventListener {
 
                     if (isDefaultWorld(oldWorld)) {
                         LOGGER.info("[DEBUG] Saving data for default world");
-                        ExplorationManager.getInstance().savePlayerData(playerName, player.getUuid(), oldWorldName);
+                        UUID uuid = holder.getComponent(UUIDComponent.getComponentType()).getUuid();
+                        ExplorationManager.getInstance().savePlayerData(playerName, uuid, oldWorldName);
                     }
 
                     ExplorationTracker.getInstance().removePlayerData(playerName);

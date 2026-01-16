@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 public class ExplorationComponent implements Component<EntityStore> {
 
     public static final BuilderCodec<ExplorationComponent> CODEC = BuilderCodec.builder(ExplorationComponent.class, ExplorationComponent::new)
-            .addField(
+            .append(
                     new KeyedCodec<>("ExploredChunks", new LongArrayCodec()),
                     (component, chunks) -> {
                         if (chunks != null) {
@@ -24,6 +24,7 @@ public class ExplorationComponent implements Component<EntityStore> {
                     },
                     component -> component.exploredChunks.toLongArray()
             )
+            .add()
             .build();
 
     private LongSet exploredChunks = new LongOpenHashSet();
