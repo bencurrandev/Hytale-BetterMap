@@ -389,6 +389,7 @@ public class BetterMapConfig {
      */
     public void setQuality(MapQuality mapQuality) {
         this.mapQuality = mapQuality;
+        this.maxChunksToLoad = mapQuality.maxChunks;
         save();
     }
 

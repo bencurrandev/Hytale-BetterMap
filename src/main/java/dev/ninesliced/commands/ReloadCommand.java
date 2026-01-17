@@ -62,7 +62,7 @@ public class ReloadCommand extends AbstractCommand {
             context.sendMessage(Message.raw("WARNING: Map Quality change pending restart (Active: " + config.getActiveMapQuality().name() + ")").color(Color.RED));
         }
 
-        context.sendMessage(Message.raw("NOTE: The server must be restarted for map quality changes to take effect."));
+        context.sendMessage(Message.raw("NOTE: The server must be restarted for map quality/max chunks changes to take effect."));
 
         return CompletableFuture.completedFuture(null);
     }

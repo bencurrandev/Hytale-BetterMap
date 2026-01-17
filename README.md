@@ -1,6 +1,6 @@
 # Hytale BetterMap Plugin
 
-**Enhance your world exploration with saved map data, customizable zoom, and performance-optimized rendering.**
+**Enhance your world exploration with saved map data, customizable zoom, waypoints, shared mapping, and performance-optimized rendering.**
 
 ---
 
@@ -8,55 +8,103 @@
 
 By default, the Hytale in-game map is fleeting. It only displays a small circular area around the player, and as soon as you walk away, the map "forgets" where you have been.
 
-**Hytale Persistent Map** changes this. This server plugin introduces a saved exploration feature. As you travel through the world, the plugin records the areas you have visited, effectively removing the "fog of war" permanently. Your map grows bigger the more you explore, allowing you to retrace your steps and navigate with ease.
+**Hytale BetterMap** changes this. This server plugin introduces a saved exploration feature. As you travel through the world, the plugin records the areas you have visited, effectively removing the "fog of war" permanently. Your map grows bigger the more you explore, allowing you to retrace your steps and navigate with ease.
 
-## New Features & Optimizations
+## Key Features
 
-* **Persistent Exploration:** The map retains all previously visited areas across sessions.
-* **Dynamic Chunk Loading (Optimization):** We have fixed the "Blue Map" crashes and memory overflow issues. The plugin now intelligently manages memory by loading only the explored chunks nearest to the player and unloading distant ones as you move.
-* **Map Quality Settings:** Choose between `LOW`, `MEDIUM`, or `HIGH` quality to balance visual fidelity with performance.
-* *Note: `HIGH` quality offers better visuals but drastically limits the number of chunks loaded to prevent memory errors.*
-* **Map Quality details:**
-  - `LOW`: Loads up to 30 000 chunks with 8x8 images.
-  - `MEDIUM`: Loads up to 10 000 chunks with 16x16 images.
-  - `HIGH`: Loads up to 3 000 chunks with 32x32 images.
+* **Persistent Exploration:** The map retains all previously visited areas across sessions. Data is saved automatically to prevent loss during server crashes.
+* **Waypoint System:** Never lose a location again. Open the waypoint menu to add markers at your current position, customize their names and colors, and share them with other players.
+* **Teleport:** Players with permission can teleport directly to their saved waypoints.
 
-* **Customizable Zoom:** You are no longer locked to the default zoom. Set your own Minimum (zoom out) and Maximum (zoom in) scales.
 
-* **Debug Mode:** Toggle console logging on or off to keep your server logs clean.
+* **Linked Exploration (Shared Map):** Optionally enable a shared map mode where all players contribute to a single global map, allowing you to see areas discovered by friends in real-time.
+* **Compass Radar:** Easily locate other players nearby directly on your compass. The range can be customized or toggled off by admins.
+* **Location Overlay:** Display your current coordinates and direction on-screen via a toggleable HUD (`/bm location`).
+* **Customizable Zoom:** You are no longer locked to the default zoom. Set your own Minimum (zoom out) and Maximum (zoom in) scales. Settings are saved per player.
+* **Multi-World Support:** Whitelist specific worlds for the mod to track, resolving compatibility issues with server hosts (like Apex) that change default world names.
+
+## Performance & Optimization
+
+* **Dynamic Chunk Loading:** The plugin intelligently manages memory by loading only the explored chunks nearest to the player and unloading distant ones.
+* **Map Quality Settings:** Admins can balance visual fidelity and performance by choosing between `LOW`, `MEDIUM`, or `HIGH` quality.
+* `LOW`: Loads up to 30,000 chunks (8x8 resolution).
+* `MEDIUM`: Loads up to 10,000 chunks (16x16 resolution).
+* `HIGH`: Loads up to 3,000 chunks (32x32 resolution). 
+
+*Note: High quality strictly limits loaded chunks to prevent memory errors.*
+
+You can also manually set the maximum number of loaded chunks via `/bm config maxchunk`, within recommended limits.
+
 
 ## Commands & Permissions
 
-This plugin includes a full suite of commands for players and admins to manage map settings in real-time.
+The command system has been updated to separate standard player features from administrative configuration.
 
-### General Command
+### Player Commands
 
-* `/bettermap` (Aliases: `/bm`, `/map`)
-* **Description:** Displays the current configuration settings (Radius, Scale, Quality, Debug status).
-* **Permission:** `command.bettermap`
+**Permission:** `dev.ninesliced.bettermap.command.base`
 
-
-
-### Configuration Commands
-
-* `/bettermap min <value>`
-* **Description:** Sets the minimum zoom scale (how far you can zoom out). Lower values allow seeing more of the map at once. Must be greater than 2.0. The default minimum zoom in base hytale is 32.
-* **Permission:** `command.bettermap.min`
+* `/bettermap` (or `/bm`)
+* Displays current map settings and status.
 
 
-* `/bettermap max <value>`
-* **Description:** Sets the maximum zoom scale (how close you can zoom in). Higher values allow for closer inspection. The default maximum zoom in base hytale is 256.
-* **Permission:** `command.bettermap.max`
+* `/bm waypoint` (or `/bm menu`)
+* Opens the Waypoint UI to manage, share, or delete waypoints.
 
 
-* `/bettermap debug <true/false>`
-* **Description:** Enables or disables debug logs in the server console. Useful for troubleshooting without crowding your logs during normal play.
-* **Permission:** `command.bettermap.debug`
+* `/bm location`
+* Toggles the personal coordinate display HUD.
 
 
-* `/bettermap reload`
-* **Description:** Reloads the configuration file and applies changes to loaded worlds immediately.
-* **Permission:** `command.bettermap.reload`
+* `/bm min <value>`
+* Sets your personal minimum zoom scale (default base is 32).
+
+
+* `/bm max <value>`
+* Sets your personal maximum zoom scale (default base is 256).
+
+
+
+### Teleportation
+
+**Permission:** `dev.ninesliced.bettermap.command.base.teleport`
+
+* **Waypoint Teleport:** Allows the user to teleport to locations via the Waypoint UI buttons.
+
+### Admin & Configuration Commands
+
+**Permission:** `dev.ninesliced.bettermap.command.base.config`
+
+* `/bm config radar <range>`
+* Sets the radar range (use `-1` for infinite).
+
+
+* `/bm config location`
+* Toggles the server-wide default for the location HUD.
+
+
+* `/bm config hideplayers`
+* Hides player cursors on the map.
+
+
+* `/bm config shareallexploration`
+* Toggles "Linked Map" mode (shared exploration data).
+
+
+* `/bm config track` / `untrack`
+* Adds or removes the current world from the active whitelist.
+
+
+* `/bm config maxchunk <number>`
+* Manually overrides the maximum number of loaded chunks.
+
+
+* `/bm config autosave <minutes>`
+* Sets the interval for auto-saving map data.
+
+
+* `/bm reload`
+* Reloads the configuration file immediately.
 
 
 
@@ -68,7 +116,7 @@ All plugin files are located within the server's `mods` directory.
 
 You can modify the plugin settings in `mods/bettermap/config.json`.
 
-*Note: Changing `mapQuality` requires a server restart to take effect.*
+*Note: Changing `mapQuality` or `maxChunksToLoad` requires a server restart to take effect.*
 
 **Default Configuration:**
 
@@ -79,22 +127,32 @@ You can modify the plugin settings in `mods/bettermap/config.json`.
   "mapQuality": "MEDIUM",
   "minScale": 10.0,
   "maxScale": 256.0,
-  "debug": false
+  "debug": false,
+  "locationEnabled": true,
+  "shareAllExploration": false,
+  "maxChunksToLoad": 10000,
+  "radarEnabled": true,
+  "radarRange": -1,
+  "hidePlayersOnMap": false,
+  "autoSaveInterval": 5,
+  "allowedWorlds": [
+    "default",
+    "world"
+  ]
 }
 
 ```
 
 ### Saved Exploration Data
 
-Map data is saved per world and per player. You can find the saved exploration files here:
-`mods/bettermap/data/`
+Map data is saved per world. You can find the saved exploration files here: `mods/bettermap/data/`
 
 ## Credits
 
 This project was created to improve the exploration quality of life in Hytale.
 
 * **Created by:** Paralaxe and Theobosse
-* **Team:** [Ninesliced](https://ninesliced.com)
+* **Team:** [Ninesliced](https://ninesliced.com/)
 
 ---
 

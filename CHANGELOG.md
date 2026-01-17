@@ -1,5 +1,94 @@
 # Changelog
 
+## v1.2.0 - Waypoints, Radar & Shared Map
+
+**New Features**
+
+* **Waypoint System:** Added a full UI menu to manage locations.
+* **Management:** Add waypoints at your current position, remove them, or update them with custom names and colors.
+* **Sharing:** Share waypoints with other players.
+* **Teleport:** Teleport directly to saved waypoints (requires permission).
+
+
+* **Shared Exploration:** Added a "Linked Map" feature. When enabled, all players share the same exploration data, allowing you to see areas discovered by others in real-time.
+* **Compass Radar:** Players can now see other players on their compass.
+* This is enabled by default but can be toggled or restricted by a range.
+
+
+* **Location Overlay:** Added an on-screen UI displaying player coordinates and info.
+* **Global:** Admins can set the server default using `/bm config location`.
+* **Personal:** Players can toggle their own display via `/bm location` (settings are now persistent per player).
+
+
+* **World Management:** Added capability to whitelist specific worlds for the mod to activate.
+* *Fix:* Solves issues with hosting providers (like Apex) where default world names change. Use `/bm config track` to add the current world to the whitelist.
+
+
+* **Crash Protection (Auto-Save):** The server now auto-saves explored areas periodically (default every 5 minutes) to prevent data loss in the event of a crash.
+
+**Configuration Updates**
+
+* **Chunk Loading Control:** Admins can now manually change the number of visible chunks via `/bm config maxchunk`.
+* *Limit:* This cannot exceed the recommended limits based on quality settings (High: 3,000 | Medium: 10,000 | Low: 30,000).
+
+
+* **Player Visibility:** Added option to hide player cursors on the map via `/bm config hideplayers`.
+* **Personal Persistence:** Player-specific settings (like Min/Max scale and Location UI) are now saved in a dedicated player config file.
+
+**Updated Config File (`config.json`)**
+
+```json
+{
+  "explorationRadius": 16,
+  "updateRateMs": 500,
+  "mapQuality": "MEDIUM",
+  "minScale": 10.0,
+  "maxScale": 256.0,
+  "debug": false,
+  "locationEnabled": true,
+  "shareAllExploration": false,
+  "maxChunksToLoad": 10000,
+  "radarEnabled": true,
+  "radarRange": -1,
+  "hidePlayersOnMap": false,
+  "autoSaveInterval": 5,
+  "allowedWorlds": [
+    "default",
+    "world"
+  ]
+}
+
+```
+
+**Commands & Permissions**
+Permissions have been restructured.
+
+* **Basic User Permission:** `dev.ninesliced.bettermap.command.base`
+* Allows access to the main command, personal settings, and waypoint creation.
+* `/bettermap` (or `/bm`) - Main command.
+* `/bm waypoint` (or `/bm menu`) - Opens Waypoint UI.
+* `/bm location` - Toggles personal coordinate display.
+* `/bm min <value>` & `/bm max <value>` - Sets personal zoom levels.
+
+
+* **Teleport Permission:** `dev.ninesliced.bettermap.command.base.teleport`
+* Allows teleporting to waypoints via the UI.
+
+
+* **Admin/Config Permission:** `dev.ninesliced.bettermap.command.base.config`
+* Allows access to all server-wide configuration commands.
+* `/bm config radar <range>` - Toggle radar/set range.
+* `/bm config hideplayers` - Hide player cursors on map.
+* `/bm config location` - Toggle server default location UI.
+* `/bm config track` / `untrack` - Add/Remove current world from whitelist.
+* `/bm config maxchunk <number>` - Set max loaded chunks.
+* `/bm config shareallexploration` - Toggle linked maps.
+* `/bm config autosave <minutes>` - Set auto-save interval.
+
+
+
+---
+
 ## v1.1.0 - Optimization & Customization Update
 
 **Optimizations & Fixes**
@@ -8,9 +97,11 @@
 * **Map Quality Settings:** Introduced a new `mapQuality` setting to balance visual fidelity and performance.
 * **Options:** `LOW`, `MEDIUM`, `HIGH` (Default is `MEDIUM`).
 * **Map Quality details:**
-  - `LOW`: Loads up to 30 000 chunks with 8x8 images.
-  - `MEDIUM`: Loads up to 10 000 chunks with 16x16 images.
-  - `HIGH`: Loads up to 3 000 chunks with 32x32 images.
+* `LOW`: Loads up to 30,000 chunks with 8x8 images.
+* `MEDIUM`: Loads up to 10,000 chunks with 16x16 images.
+* `HIGH`: Loads up to 3,000 chunks with 32x32 images.
+
+
 * **Performance Note:** `HIGH` quality increases texture resolution but drastically limits the number of chunks loaded simultaneously to prevent Memory Overflow errors.
 
 
@@ -21,7 +112,7 @@
 * **Custom Zoom Scaling:** Players can now customize the map zoom limits. You can define how far you can zoom out (`minScale`) and how close you can zoom in (`maxScale`).
 
 **Configuration**
-The `config.json` has been updated with new parameters:
+The `config.json` was updated in this version:
 
 ```json
 {
@@ -37,8 +128,7 @@ The `config.json` has been updated with new parameters:
 
 *Note: Changing `mapQuality` requires a server restart to take effect.*
 
-**Commands & Permissions**
-We have expanded the command list to allow in-game configuration changes.
+**Commands & Permissions (Legacy v1.1)**
 
 * `/bettermap` (Aliases: `/bm`, `/map`)
 * **Description:** Displays current settings (Radius, Scale, Quality, Debug status).
