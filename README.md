@@ -2,6 +2,13 @@
 
 **Enhance your world exploration with saved map data, customizable zoom, waypoints, shared mapping, and performance-optimized rendering.**
 
+## License
+
+**ALL RIGHTS RESERVED.**
+
+ASK US BEFORE IF YOU WANT TO PUBLISH A FORKED VERSION OF THIS PLUGIN.
+YOU CAN FORK IT AS YOU WANT FOR A PRIVATE USE, OR CONTRIBUTE TO THE ORIGINAL PROJECT.
+
 ---
 
 ## What is this?
