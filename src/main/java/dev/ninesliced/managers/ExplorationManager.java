@@ -128,9 +128,62 @@ public class ExplorationManager {
      * @param worldName  The world name.
      */
     public void savePlayerData(String playerName, UUID playerUUID, String worldName) {
-        if (persistenceEnabled && persistence != null) {
+        if (persistenceEnabled) {
             persistence.save(playerName, playerUUID, worldName);
         }
+    }
+
+    /**
+     * Gets all explored chunks for a given world, combining persistence and active data.
+     *
+     * @param worldName The world name.
+     * @return A set of all explored chunks.
+     */
+    public java.util.Set<Long> getAllExploredChunks(String worldName) {
+        java.util.Set<Long> allChunks = new java.util.HashSet<>();
+
+        if (persistenceEnabled) {
+            allChunks.addAll(persistence.loadAllChunks(worldName));
+        }
+
+        // Add currently active data (which might be newer than persistence)
+        // We iterate over all loaded players to find those in the target world
+        // Since tracker doesn't index by world, we have to rely on persistence + iterating known players?
+        // But Tracker stores by name.
+        // We can't easily know which world a tracker entry belongs to without the player object.
+        // However, ExplorationEventListener keeps track of player worlds in `playerWorlds` map, but it's private there.
+        // But better: we can iterate over server players.
+
+        // Actually, we can just iterate `ExplorationTracker` data if we assume we can check their world.
+        // But `ExplorationTracker` only has `PlayerExplorationData`. It doesn't store the player entity or world name directly.
+        // But usually only ONLINE players are in `ExplorationTracker`.
+        // So we can assume if they are in `ExplorationTracker` they are online.
+
+        // Wait, getting online players is easy via `Universe`.
+        // But I don't want to depend on Universe here if I can avoid it.
+        // Let's rely on persistence for offline. For online, we can use `ExplorationTracker`.
+        // But we need to filter by world.
+
+        // Maybe we just let the caller handle it?
+        // No, `ExplorationManager` is central.
+
+        // Let's iterate `ExplorationTracker` keys, get player by name from server?
+        // Or simply:
+
+        com.hypixel.hytale.server.core.universe.Universe universe = com.hypixel.hytale.server.core.universe.Universe.get();
+        if (universe != null) {
+            com.hypixel.hytale.server.core.universe.world.World world = universe.getWorld(worldName);
+            if (world != null) {
+                for (Player player : world.getPlayers()) {
+                     dev.ninesliced.exploration.ExplorationTracker.PlayerExplorationData data = ExplorationTracker.getInstance().getPlayerData(player);
+                     if (data != null) {
+                         allChunks.addAll(data.getExploredChunks().getExploredChunks());
+                     }
+                }
+            }
+        }
+
+        return allChunks;
     }
 
     /**

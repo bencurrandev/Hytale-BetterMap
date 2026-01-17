@@ -45,6 +45,7 @@ public class ReloadCommand extends AbstractCommand {
                 try {
                     WorldMapHook.updateWorldMapConfigs(world);
                     WorldMapHook.broadcastMapSettings(world);
+                    WorldMapHook.refreshTrackers(world);
                 } catch (Exception _) {}
             });
         }

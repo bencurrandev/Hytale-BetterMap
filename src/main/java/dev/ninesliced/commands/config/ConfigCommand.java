@@ -27,6 +27,7 @@ public class ConfigCommand extends AbstractCommand {
         this.addSubCommand(new DebugCommand());
         this.addSubCommand(new MapQualityCommand());
         this.addSubCommand(new LocationCommand());
+        this.addSubCommand(new ShareAllExplorationCommand());
     }
 
     @Override
@@ -41,4 +42,3 @@ public class ConfigCommand extends AbstractCommand {
          return CompletableFuture.completedFuture(null);
     }
 }
-

@@ -26,6 +26,7 @@ public class BetterMapConfig {
     private float maxScale = 256.0f;
     private boolean debug = false;
     private boolean locationEnabled = true;
+    private boolean shareAllExploration = false;
 
     private transient Path configPath;
     private transient MapQuality activeMapQuality;
@@ -117,6 +118,12 @@ public class BetterMapConfig {
 
                     if (jsonObject.has("locationEnabled")) {
                         this.locationEnabled = loaded.locationEnabled;
+                    } else {
+                        needsSave = true;
+                    }
+
+                    if (jsonObject.has("shareAllExploration")) {
+                        this.shareAllExploration = loaded.shareAllExploration;
                     } else {
                         needsSave = true;
                     }
@@ -294,6 +301,34 @@ public class BetterMapConfig {
 
     public boolean isLocationEnabled() {
         return locationEnabled;
+    }
+
+    /**
+     * Checks if all players exploration data should be shared.
+     *
+     * @return True if shared exploration is enabled.
+     */
+    public boolean isShareAllExploration() {
+        return shareAllExploration;
+    }
+
+    /**
+     * Sets whether exploration data should be shared among all players.
+     *
+     * @param shareAllExploration True to share all exploration.
+     */
+    public void setShareAllExploration(boolean shareAllExploration) {
+        this.shareAllExploration = shareAllExploration;
+        save();
+    }
+
+    /**
+     * Gets the active map quality setting.
+     *
+     * @return The active map quality.
+     */
+    public MapQuality getActiveMapQualitySetting() {
+        return activeMapQuality;
     }
 
     public void setLocationEnabled(boolean locationEnabled) {

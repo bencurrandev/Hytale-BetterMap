@@ -1,5 +1,6 @@
 package dev.ninesliced.utils;
 
+import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.math.iterator.CircleSpiralIterator;
 import com.hypixel.hytale.protocol.Packet;
 import com.hypixel.hytale.protocol.packets.worldmap.MapChunk;
@@ -7,6 +8,7 @@ import com.hypixel.hytale.protocol.packets.worldmap.UpdateWorldMap;
 import com.hypixel.hytale.protocol.packets.worldmap.UpdateWorldMapSettings;
 import com.hypixel.hytale.server.core.command.system.CommandSender;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.WorldMapTracker;
 import com.hypixel.hytale.server.core.universe.world.worldmap.WorldMapManager;
@@ -17,6 +19,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.ninesliced.configs.BetterMapConfig;
 import dev.ninesliced.configs.PlayerConfig;
 import dev.ninesliced.exploration.ExplorationTracker;
+import dev.ninesliced.managers.ExplorationManager;
 import dev.ninesliced.managers.MapExpansionManager;
 import dev.ninesliced.managers.PlayerConfigManager;
 
@@ -343,6 +346,36 @@ public class WorldMapHook {
     }
 
     /**
+     * Refreshes the map trackers for all players in the given world.
+     * Use this when exploration data sharing settings change.
+     *
+     * @param world The world.
+     */
+    public static void refreshTrackers(@Nonnull World world) {
+        for (PlayerRef playerRef : world.getPlayerRefs()) {
+            Holder<EntityStore> holder = playerRef.getHolder();
+            if (holder == null) continue;
+            Player player = holder.getComponent(Player.getComponentType());
+            if (player == null) continue;
+
+            try {
+                Ref<EntityStore> ref = playerRef.getReference();
+                if (ref != null && ref.isValid()) {
+                    TransformComponent tc = ref.getStore().getComponent(ref, TransformComponent.getComponentType());
+
+                    if (tc != null) {
+                        var pos = tc.getPosition();
+                        forceTrackerUpdate(player, player.getWorldMapTracker(), pos.x, pos.z);
+                        updateExplorationState(player, player.getWorldMapTracker(), pos.x, pos.z);
+                    }
+                }
+            } catch (Exception e) {
+                LOGGER.warning("Failed to refresh tracker for " + player.getDisplayName() + ": " + e.getMessage());
+            }
+        }
+    }
+
+    /**
      * Custom iterator that only returns chunks that have been explored or are within the persistent boundaries.
      */
     public static class RestrictedSpiralIterator extends CircleSpiralIterator {
@@ -391,7 +424,15 @@ public class WorldMapHook {
             this.currentGoalRadius = endRadius;
 
             Set<Long> mapChunks = new HashSet<>();
-            Set<Long> exploredWorldChunks = data.getExploredChunks().getExploredChunks();
+            Set<Long> exploredWorldChunks;
+
+            if (BetterMapConfig.getInstance().isShareAllExploration()) {
+                com.hypixel.hytale.server.core.universe.world.World world = tracker.getPlayer().getWorld();
+                String worldName = world != null ? world.getName() : "world";
+                exploredWorldChunks = ExplorationManager.getInstance().getAllExploredChunks(worldName);
+            } else {
+                exploredWorldChunks = data.getExploredChunks().getExploredChunks();
+            }
 
             for (Long chunkIdx : exploredWorldChunks) {
                 int wx = ChunkUtil.indexToChunkX(chunkIdx);

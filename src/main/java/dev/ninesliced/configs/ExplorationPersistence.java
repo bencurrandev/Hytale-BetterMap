@@ -152,4 +152,39 @@ public class ExplorationPersistence {
             LOGGER.severe("Failed to save exploration data for " + playerName + ": " + e.getMessage());
         }
     }
+
+    /**
+     * Loads chunks from all player files in the specified world folder.
+     *
+     * @param worldName The name of the world.
+     * @return A set of all explored chunk indices.
+     */
+    public Set<Long> loadAllChunks(@Nonnull String worldName) {
+        Set<Long> allChunks = new HashSet<>();
+        Path worldDir = storageDir.resolve(worldName);
+
+        if (!Files.exists(worldDir)) {
+            return allChunks;
+        }
+
+        try (java.util.stream.Stream<Path> stream = Files.list(worldDir)) {
+            stream.filter(path -> path.toString().endsWith(".bin")).forEach(file -> {
+                try (DataInputStream in = new DataInputStream(new BufferedInputStream(Files.newInputStream(file)))) {
+                    int version = in.readInt();
+                    if (version == DATA_VERSION) {
+                        int count = in.readInt();
+                        for (int i = 0; i < count; i++) {
+                            allChunks.add(in.readLong());
+                        }
+                    }
+                } catch (IOException e) {
+                    LOGGER.warning("Failed to load chunk data from " + file.getFileName() + ": " + e.getMessage());
+                }
+            });
+        } catch (IOException e) {
+            LOGGER.severe("Failed to list files in " + worldDir + ": " + e.getMessage());
+        }
+
+        return allChunks;
+    }
 }
