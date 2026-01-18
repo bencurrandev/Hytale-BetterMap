@@ -120,10 +120,10 @@ public class WaypointEditPage extends InteractiveCustomUIPage<WaypointEditPage.E
         events.addEventBinding(CustomUIEventBindingType.Activating, "#ColorWhite", 
             new EventData().put(EditData.KEY_ACTION, Action.SET_WHITE.name()), false);
 
-        if (canGlobal) {
-            events.addEventBinding(CustomUIEventBindingType.ValueChanged, "#GlobalCheckbox",
-                new EventData().put(EditData.KEY_GLOBAL, "#GlobalCheckbox.Value"), false);
-        }
+        //if (canGlobal) {
+        //    events.addEventBinding(CustomUIEventBindingType.ValueChanged, "#GlobalCheckbox",
+        //        new EventData().put(EditData.KEY_GLOBAL, "#GlobalCheckbox.Value"), false);
+        //}
     }
 
     @Override
