@@ -141,6 +141,8 @@ public class PlayerRadarManager {
                 mapManager.addMarkerProvider(PlayerRadarProvider.PROVIDER_ID, radarProvider);
                 registeredWorlds.add(worldName);
                 LOGGER.info("Registered PlayerRadarProvider for world: " + worldName);
+            } else {
+                registeredWorlds.add(worldName);
             }
         } catch (Exception e) {
             LOGGER.warning("Failed to register radar provider for world " + worldName + ": " + e.getMessage());

@@ -73,7 +73,6 @@ public class HidePlayersCommand extends AbstractCommand {
             } else {
                 playerRef.sendMessage(Message.raw("Players are now visible on the world map.").color(Color.GRAY));
             }
-            playerRef.sendMessage(Message.raw("NOTE: You'll need to restart the server for this change to take effect.").color(Color.RED));
         }, world);
     }
 }

@@ -91,6 +91,8 @@ public class MapPrivacyManager {
     public void updatePrivacyState() {
         BetterMapConfig config = BetterMapConfig.getInstance();
         boolean hide = config.isHidePlayersOnMap();
+        boolean radarEnabled = config.isRadarEnabled();
+        int radarRange = config.getRadarRange();
         boolean allowMarkerTeleports = config.isAllowMapMarkerTeleports();
 
         try {
@@ -100,6 +102,8 @@ public class MapPrivacyManager {
                 world.execute(() -> {
                     if (hide) {
                         this.removeProvider(world);
+                    } else {
+                        this.restoreProvider(world);
                     }
 
                     try {
@@ -112,7 +116,61 @@ public class MapPrivacyManager {
                             if (player == null) continue;
 
                             WorldMapTracker tracker = player.getWorldMapTracker();
-                            tracker.setPlayerMapFilter(ignored -> !hide);
+
+                            if (hide) {
+                                tracker.setPlayerMapFilter(ignored -> false);
+                            } else if (radarEnabled && radarRange >= 0) {
+                                final int rangeSq = radarRange * radarRange;
+                                final String worldName = world.getName();
+                                final String viewerUuid = playerRef.getUuid().toString();
+
+                                tracker.setPlayerMapFilter(otherPlayer -> {
+                                    try {
+                                        var radarDataList = PlayerRadarManager.getInstance().getRadarData(worldName);
+
+                                        PlayerRadarManager.RadarData viewerData = null;
+                                        for (var data : radarDataList) {
+                                            if (data.uuid.equals(viewerUuid)) {
+                                                viewerData = data;
+                                                break;
+                                            }
+                                        }
+                                        if (viewerData == null) return true;
+
+                                        String otherUuid = null;
+                                        var otherRef = otherPlayer.getReference();
+                                        if (otherRef != null) {
+                                            var store = otherRef.getStore();
+                                            var otherPlayerRef = store.getComponent(otherRef, PlayerRef.getComponentType());
+                                            if (otherPlayerRef != null) {
+                                                otherUuid = otherPlayerRef.getUuid().toString();
+                                            }
+                                        }
+                                        if (otherUuid == null) return true;
+
+                                        PlayerRadarManager.RadarData otherData = null;
+                                        for (var data : radarDataList) {
+                                            if (data.uuid.equals(otherUuid)) {
+                                                otherData = data;
+                                                break;
+                                            }
+                                        }
+                                        if (otherData == null) return true;
+
+                                        double dx = otherData.position.x - viewerData.position.x;
+                                        double dy = otherData.position.y - viewerData.position.y;
+                                        double dz = otherData.position.z - viewerData.position.z;
+                                        double distanceSquared = dx * dx + dy * dy + dz * dz;
+
+                                        return distanceSquared <= rangeSq;
+                                    } catch (Exception e) {
+                                        return true;
+                                    }
+                                });
+                            } else {
+                                tracker.setPlayerMapFilter(null);
+                            }
+
                             boolean canTeleportMarkers = allowMarkerTeleports && PermissionsUtil.canTeleport(player);
                             tracker.setAllowTeleportToMarkers(world, canTeleportMarkers);
                         }
@@ -128,18 +186,91 @@ public class MapPrivacyManager {
     private void applyPlayerSettings(Player player, World world) {
         BetterMapConfig config = BetterMapConfig.getInstance();
         boolean hide = config.isHidePlayersOnMap();
+        boolean radarEnabled = config.isRadarEnabled();
+        int radarRange = config.getRadarRange();
         boolean allowMarkerTeleports = config.isAllowMapMarkerTeleports();
 
         if (world != null) {
             this.monitoredWorlds.add(world);
+
             if (hide) {
                 this.removeProvider(world);
+            } else {
+                this.restoreProvider(world);
             }
         }
 
         try {
             WorldMapTracker tracker = player.getWorldMapTracker();
-            tracker.setPlayerMapFilter(ignored -> !hide);
+
+            if (hide) {
+                tracker.setPlayerMapFilter(ignored -> false);
+            } else if (radarEnabled && radarRange >= 0 && world != null) {
+                final int rangeSq = radarRange * radarRange;
+                final String worldName = world.getName();
+
+                String viewerUuid = null;
+                var ref = player.getReference();
+                if (ref != null) {
+                    var store = ref.getStore();
+                    var pRef = store.getComponent(ref, PlayerRef.getComponentType());
+                    if (pRef != null) {
+                        viewerUuid = pRef.getUuid().toString();
+                    }
+                }
+                final String finalViewerUuid = viewerUuid;
+
+                if (finalViewerUuid != null) {
+                    tracker.setPlayerMapFilter(otherPlayer -> {
+                        try {
+                            var radarDataList = PlayerRadarManager.getInstance().getRadarData(worldName);
+
+                            PlayerRadarManager.RadarData viewerData = null;
+                            for (var data : radarDataList) {
+                                if (data.uuid.equals(finalViewerUuid)) {
+                                    viewerData = data;
+                                    break;
+                                }
+                            }
+                            if (viewerData == null) return true;
+
+                            String otherUuid = null;
+                            var otherRef = otherPlayer.getReference();
+                            if (otherRef != null) {
+                                var store = otherRef.getStore();
+                                var otherPlayerRef = store.getComponent(otherRef, PlayerRef.getComponentType());
+                                if (otherPlayerRef != null) {
+                                    otherUuid = otherPlayerRef.getUuid().toString();
+                                }
+                            }
+                            if (otherUuid == null) return true;
+
+                            PlayerRadarManager.RadarData otherData = null;
+                            for (var data : radarDataList) {
+                                if (data.uuid.equals(otherUuid)) {
+                                    otherData = data;
+                                    break;
+                                }
+                            }
+                            if (otherData == null) return true;
+
+                            double dx = otherData.position.x - viewerData.position.x;
+                            double dy = otherData.position.y - viewerData.position.y;
+                            double dz = otherData.position.z - viewerData.position.z;
+                            double distanceSquared = dx * dx + dy * dy + dz * dz;
+
+                            return distanceSquared <= rangeSq;
+                        } catch (Exception e) {
+                            return true;
+                        }
+                    });
+                } else {
+                    tracker.setPlayerMapFilter(null);
+                }
+            } else {
+                tracker.setPlayerMapFilter(null);
+            }
+
             boolean canTeleportMarkers = allowMarkerTeleports && PermissionsUtil.canTeleport(player);
             tracker.setAllowTeleportToMarkers(world, canTeleportMarkers);
         } catch (Exception e) {
@@ -163,14 +294,8 @@ public class MapPrivacyManager {
             for (String key : targetKeys) {
                 if (!providers.containsKey(key)) continue;
 
-                // Backup before remove
                 worldBackups.put(key, providers.get(key));
-
                 providers.remove(key);
-
-                if (BetterMapConfig.getInstance().isDebug()) {
-                    LOGGER.info("Removed and backed up provider key: " + key + " from world " + world.getName());
-                }
             }
         } catch (Exception e) {
             LOGGER.severe("Error removing provider: " + e.getMessage());
@@ -181,20 +306,21 @@ public class MapPrivacyManager {
         try {
             if (world == null) return;
 
-            Map<String, WorldMapManager.MarkerProvider> backups = backedUpProviders.remove(world);
-            if (backups == null || backups.isEmpty()) return;
-
             WorldMapManager mapManager = world.getWorldMapManager();
-
             Map<String, WorldMapManager.MarkerProvider> providers = mapManager.getMarkerProviders();
+
+            Map<String, WorldMapManager.MarkerProvider> backups = backedUpProviders.get(world);
+            if (backups == null || backups.isEmpty()) {
+                return;
+            }
+
+            backedUpProviders.remove(world);
+
             if (providers == null) return;
 
             for (Map.Entry<String, WorldMapManager.MarkerProvider> entry : backups.entrySet()) {
                 if (!providers.containsKey(entry.getKey())) {
                     providers.put(entry.getKey(), entry.getValue());
-                    if (BetterMapConfig.getInstance().isDebug()) {
-                        LOGGER.info("Restored provider key: " + entry.getKey() + " to world " + world.getName());
-                    }
                 }
             }
         } catch (Exception e) {

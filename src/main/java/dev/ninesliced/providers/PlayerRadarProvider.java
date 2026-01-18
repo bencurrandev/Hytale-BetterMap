@@ -41,6 +41,7 @@ public class PlayerRadarProvider implements WorldMapManager.MarkerProvider {
             UUID viewerUuid = ((CommandSender) viewingPlayer).getUuid();
 
             BetterMapConfig config = BetterMapConfig.getInstance();
+
             if (!config.isRadarEnabled() || config.isHidePlayersOnMap()) {
                 return;
             }
@@ -55,7 +56,9 @@ public class PlayerRadarProvider implements WorldMapManager.MarkerProvider {
                 }
             }
 
-            if (viewerData == null) return;
+            if (viewerData == null) {
+                return;
+            }
             Vector3d viewerPos = viewerData.position;
 
             int radarRange = config.getRadarRange();
