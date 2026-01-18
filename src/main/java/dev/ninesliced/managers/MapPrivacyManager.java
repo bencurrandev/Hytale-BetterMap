@@ -114,11 +114,10 @@ public class MapPrivacyManager {
                         WorldMapTracker tracker = player.getWorldMapTracker();
                         if (hide) {
                             tracker.setPlayerMapFilter(_ -> false);
-                            tracker.setAllowTeleportToMarkers(world, false);
                         } else {
                             tracker.setPlayerMapFilter(_ -> true);
-                            tracker.setAllowTeleportToMarkers(world, true);
                         }
+                        tracker.setAllowTeleportToMarkers(world, BetterMapConfig.getInstance().isAllowMapMarkerTeleports());
                     }
                 } catch (Exception e) {}
             }
@@ -137,7 +136,7 @@ public class MapPrivacyManager {
         try {
             WorldMapTracker tracker = player.getWorldMapTracker();
             tracker.setPlayerMapFilter(_ -> false);
-            tracker.setAllowTeleportToMarkers(world, false);
+            tracker.setAllowTeleportToMarkers(world, BetterMapConfig.getInstance().isAllowMapMarkerTeleports());
         } catch (Exception e) {
             LOGGER.severe("Error applying privacy filter: " + e.getMessage());
         }
