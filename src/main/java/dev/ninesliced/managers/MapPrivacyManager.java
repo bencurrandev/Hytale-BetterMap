@@ -110,7 +110,7 @@ public class MapPrivacyManager {
                         if (player == null) continue;
 
                         WorldMapTracker tracker = player.getWorldMapTracker();
-                        tracker.setPlayerMapFilter(_ -> !hide);
+                        tracker.setPlayerMapFilter(ignored -> !hide);
                         tracker.setAllowTeleportToMarkers(world, allowMarkerTeleports);
                     }
                 } catch (Exception e) {}
@@ -135,7 +135,7 @@ public class MapPrivacyManager {
 
         try {
             WorldMapTracker tracker = player.getWorldMapTracker();
-            tracker.setPlayerMapFilter(_ -> !hide);
+            tracker.setPlayerMapFilter(ignored -> !hide);
             tracker.setAllowTeleportToMarkers(world, allowMarkerTeleports);
         } catch (Exception e) {
             LOGGER.severe("Error applying privacy filter: " + e.getMessage());
@@ -153,7 +153,7 @@ public class MapPrivacyManager {
 
             List<String> targetKeys = Arrays.asList("playerMarkers", "playerIcons", "players");
 
-            Map<String, WorldMapManager.MarkerProvider> worldBackups = backedUpProviders.computeIfAbsent(world, _ -> new HashMap<>());
+            Map<String, WorldMapManager.MarkerProvider> worldBackups = backedUpProviders.computeIfAbsent(world, ignored -> new HashMap<>());
 
             for (String key : targetKeys) {
                 if (!providers.containsKey(key)) continue;
