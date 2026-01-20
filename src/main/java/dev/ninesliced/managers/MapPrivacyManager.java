@@ -70,8 +70,6 @@ public class MapPrivacyManager {
 
         HytaleServer.SCHEDULED_EXECUTOR.scheduleAtFixedRate(() -> {
             try {
-                if (!BetterMapConfig.getInstance().isHidePlayersOnMap()) return;
-
                 for (World world : this.monitoredWorlds) {
                     if (world == null) continue;
                     this.removeProvider(world);
@@ -100,11 +98,8 @@ public class MapPrivacyManager {
                 if (world == null) continue;
 
                 world.execute(() -> {
-                    if (hide) {
-                        this.removeProvider(world);
-                    } else {
-                        this.restoreProvider(world);
-                    }
+                    // Always remove the default player indicator to avoid duplicate cursors
+                    this.removeProvider(world);
 
                     try {
                         for (PlayerRef playerRef : world.getPlayerRefs()) {
@@ -192,12 +187,8 @@ public class MapPrivacyManager {
 
         if (world != null) {
             this.monitoredWorlds.add(world);
-
-            if (hide) {
-                this.removeProvider(world);
-            } else {
-                this.restoreProvider(world);
-            }
+            // Always remove the default player indicator to avoid duplicate cursors
+            this.removeProvider(world);
         }
 
         try {
@@ -299,32 +290,6 @@ public class MapPrivacyManager {
             }
         } catch (Exception e) {
             LOGGER.severe("Error removing provider: " + e.getMessage());
-        }
-    }
-
-    private void restoreProvider(World world) {
-        try {
-            if (world == null) return;
-
-            WorldMapManager mapManager = world.getWorldMapManager();
-            Map<String, WorldMapManager.MarkerProvider> providers = mapManager.getMarkerProviders();
-
-            Map<String, WorldMapManager.MarkerProvider> backups = backedUpProviders.get(world);
-            if (backups == null || backups.isEmpty()) {
-                return;
-            }
-
-            backedUpProviders.remove(world);
-
-            if (providers == null) return;
-
-            for (Map.Entry<String, WorldMapManager.MarkerProvider> entry : backups.entrySet()) {
-                if (!providers.containsKey(entry.getKey())) {
-                    providers.put(entry.getKey(), entry.getValue());
-                }
-            }
-        } catch (Exception e) {
-            LOGGER.severe("Error restoring provider: " + e.getMessage());
         }
     }
 }

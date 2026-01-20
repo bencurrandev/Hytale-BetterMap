@@ -2,8 +2,6 @@ package dev.ninesliced.providers;
 
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
-import com.hypixel.hytale.protocol.Direction;
-import com.hypixel.hytale.protocol.Position;
 import com.hypixel.hytale.protocol.packets.worldmap.MapMarker;
 import com.hypixel.hytale.server.core.asset.type.gameplay.GameplayConfig;
 import com.hypixel.hytale.server.core.command.system.CommandSender;
@@ -11,6 +9,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.WorldMapTracker;
 import com.hypixel.hytale.server.core.universe.world.worldmap.WorldMapManager;
+import com.hypixel.hytale.server.core.util.PositionUtil;
 import dev.ninesliced.configs.BetterMapConfig;
 import dev.ninesliced.managers.PlayerRadarManager;
 import dev.ninesliced.managers.PlayerRadarManager.RadarData;
@@ -86,8 +85,19 @@ public class PlayerRadarProvider implements WorldMapManager.MarkerProvider {
                     String markerId = MARKER_PREFIX + otherData.uuid;
                     String markerName = otherData.name + " (" + distance + "m)";
 
-                    MapMarker marker = createPlayerMarker(markerId, markerName, otherPos, otherData.rotation);
-                    tracker.trySendMarker(viewRadius, chunkX, chunkZ, marker);
+                    float yaw = otherData.rotation != null ? otherData.rotation.getYaw() : 0.0f;
+
+                    tracker.trySendMarker(
+                        viewRadius,
+                        chunkX,
+                        chunkZ,
+                        otherPos,
+                        yaw,
+                        markerId,
+                        markerName,
+                        otherData,
+                        PlayerRadarProvider::createMarker
+                    );
                 } catch (Exception e) {
                     // Silently ignore individual player marker failures
                 }
@@ -100,14 +110,17 @@ public class PlayerRadarProvider implements WorldMapManager.MarkerProvider {
     /**
      * Creates a MapMarker for a player.
      */
-    private MapMarker createPlayerMarker(String id, String name, Vector3d position, Vector3f rotation) {
-        com.hypixel.hytale.protocol.Transform transform = new com.hypixel.hytale.protocol.Transform();
-        transform.position = new Position(position.x, position.y, position.z);
-        transform.orientation = new Direction(
-                rotation != null ? rotation.x : 0.0f,
-                rotation != null ? rotation.y : 0.0f,
-                rotation != null ? rotation.z : 0.0f
+    private static MapMarker createMarker(String id, String name, RadarData data) {
+        com.hypixel.hytale.math.vector.Transform vecTransform = new com.hypixel.hytale.math.vector.Transform(
+            data.position,
+            data.rotation != null ? data.rotation : Vector3f.ZERO
         );
-        return new MapMarker(id, name, MARKER_ICON, transform, null);
+        return new MapMarker(
+            id,
+            name,
+            MARKER_ICON,
+            PositionUtil.toTransformPacket(vecTransform),
+            null
+        );
     }
 }
