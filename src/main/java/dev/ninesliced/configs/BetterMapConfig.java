@@ -374,7 +374,7 @@ public class BetterMapConfig {
      * @param minScale The new minimum scale.
      */
     public void setMinScale(float minScale) {
-        this.minScale = minScale;
+        this.minScale = Math.max(minScale, 2);
         save();
     }
 
