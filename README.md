@@ -76,7 +76,7 @@ You can either do `/op add <player>` to give full access or assign specific perm
 
 ### Teleportation
 
-**Permission:** `dev.ninesliced.bettermap.command.base.teleport`
+**Permission:** `dev.ninesliced.bettermap.command.teleport`
 
 * **Waypoint Teleport:** Allows the user to teleport to locations via the Waypoint UI buttons.
 
