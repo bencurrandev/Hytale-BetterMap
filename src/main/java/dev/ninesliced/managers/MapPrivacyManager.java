@@ -98,7 +98,6 @@ public class MapPrivacyManager {
                 if (world == null) continue;
 
                 world.execute(() -> {
-                    // Always remove the default player indicator to avoid duplicate cursors
                     this.removeProvider(world);
 
                     try {
@@ -187,7 +186,6 @@ public class MapPrivacyManager {
 
         if (world != null) {
             this.monitoredWorlds.add(world);
-            // Always remove the default player indicator to avoid duplicate cursors
             this.removeProvider(world);
         }
 

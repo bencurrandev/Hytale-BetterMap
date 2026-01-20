@@ -76,7 +76,6 @@ public class PlayerRadarManager {
                 Vector3d pos = null;
                 Vector3f rot = null;
 
-                // Try to get live transform from TransformComponent using Ref
                 Ref<EntityStore> ref = playerRef.getReference();
                 if (ref != null && ref.isValid()) {
                     TransformComponent tc = ref.getStore().getComponent(ref, TransformComponent.getComponentType());
@@ -86,7 +85,6 @@ public class PlayerRadarManager {
                     }
                 }
 
-                // Fallback to playerRef.getTransform() if TransformComponent not available
                 if (pos == null) {
                     com.hypixel.hytale.math.vector.Transform transform = playerRef.getTransform();
                     if (transform == null) continue;

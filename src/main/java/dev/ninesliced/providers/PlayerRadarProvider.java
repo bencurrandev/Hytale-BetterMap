@@ -98,9 +98,7 @@ public class PlayerRadarProvider implements WorldMapManager.MarkerProvider {
                         otherData,
                         PlayerRadarProvider::createMarker
                     );
-                } catch (Exception e) {
-                    // Silently ignore individual player marker failures
-                }
+                } catch (Exception e) {}
             }
         } catch (Exception e) {
             LOGGER.warning("Error in PlayerRadarProvider.update: " + e.getMessage());
