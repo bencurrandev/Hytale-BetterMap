@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.2.4 - Various Fixes
+
+**Fixes & Improvements**
+* **Black Map after world switch:** Fixed an issue where the map would appear black after switching worlds.
+* **minimal min scale enforcement:** Ensured that the minimum scale cannot be set below 2.0 to prevent zoom crashes.
+* **Waypoint command:** Added `/wp` and `/waypoint` for easier access to the waypoint menu.
+* **Optimized Exploration Ticker:** Improved performance of the exploration ticker for smoother operation.
+
+
 ## v1.2.3 - Minor Fixes
 
 **Fixes**
