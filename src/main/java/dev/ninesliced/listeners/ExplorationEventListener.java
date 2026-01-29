@@ -60,11 +60,15 @@ public class ExplorationEventListener {
 
             world.execute(() -> WorldMapHook.sendMapSettingsToPlayer(player));
 
+            if (isTrackedWorld(world)) {
+                WaypointManager.onPlayerJoin(player);
+            }
+
             if (playerWorlds.containsKey(playerName)) {
                 String trackedWorld = playerWorlds.get(playerName);
                 String currentWorld = world.getName();
                 if (trackedWorld != null && trackedWorld.equals(currentWorld)) {
-                    LOGGER.info("[DEBUG] Player " + playerName + " already tracked in world " + currentWorld + ", skipping PlayerReadyEvent");
+                    LOGGER.info("[DEBUG] Player " + playerName + " already tracked in world " + currentWorld + ", skipping rest of PlayerReadyEvent");
                     return;
                 }
             }
@@ -83,7 +87,6 @@ public class ExplorationEventListener {
 
                 PlayerRadarManager.getInstance().registerForPlayer(player);
                 
-                WaypointManager.onPlayerJoin(player);
 
                 LOGGER.info("Exploration tracking initialized for player: " + playerName);
             } else {
