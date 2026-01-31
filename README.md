@@ -134,7 +134,7 @@ All plugin files are located within the server's `mods` directory.
 
 ### Configuration File
 
-You can modify the plugin settings in `mods/bettermap/config.json`.
+You can modify the plugin settings in `mods/BetterMap/config.json`.
 
 _Note: Changing `mapQuality` or `maxChunksToLoad` requires a server restart to take effect._
 
@@ -171,7 +171,9 @@ _Note: Changing `mapQuality` or `maxChunksToLoad` requires a server restart to t
 
 ### Saved Exploration Data
 
-Map data is saved per world. You can find the saved exploration files here: `mods/bettermap/data/`
+Map data is saved per world. You can find the saved exploration files here: `mods/BetterMap/data/`
+
+> **⚠️ Note for Steam Deck/Linux/Mac Users:** If upgrading from a version prior to 1.2.7, you may need to manually rename the `Data` directory to `data` (lowercase) due to case-sensitive file systems that might be used. Move any existing files from `mods/BetterMap/Data/` to `mods/BetterMap/data/` to preserve your exploration data.
 
 ## Examples:
 
