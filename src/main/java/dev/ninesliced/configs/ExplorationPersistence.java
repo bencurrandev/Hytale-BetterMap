@@ -36,7 +36,7 @@ public class ExplorationPersistence {
      */
     public ExplorationPersistence() {
         Path serverRoot = Paths.get(".").toAbsolutePath().normalize();
-        this.storageDir = serverRoot.resolve("mods").resolve("BetterMap").resolve("Data");
+        this.storageDir = serverRoot.resolve("mods").resolve("BetterMap").resolve("data");
 
         LOGGER.info("Exploration storage root directory: " + this.storageDir.toString());
         try {

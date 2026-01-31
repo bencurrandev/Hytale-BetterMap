@@ -173,6 +173,8 @@ _Note: Changing `mapQuality` or `maxChunksToLoad` requires a server restart to t
 
 Map data is saved per world. You can find the saved exploration files here: `mods/bettermap/data/`
 
+> **⚠️ Note for Steam Deck/Linux/Mac Users:** If upgrading from a version prior to 1.2.7, you may need to manually rename the `Data` directory to `data` (lowercase) due to case-sensitive file systems that might be used. Move any existing files from `mods/BetterMap/Data/` to `mods/BetterMap/data/` to preserve your exploration data.
+
 ## Examples:
 
 *   Waypoint list using command `/bettermap waypoint menu`:
