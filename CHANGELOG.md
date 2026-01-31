@@ -252,8 +252,8 @@ The `config.json` was updated in this version:
 
 * **Persistent Map:** Added the core functionality to save explored map areas. Fog of war no longer resets between sessions.
 * **Custom View Range:** Players (or admins) can now define the size of the exploration circle.
-* **Data Storage:** Implemented a file saving system. Map data is stored in `mods/bettermap/data/"worldname"/"userId"`.
-* **Configuration:** Added `config.json` support located in `mods/bettermap/`.
+* **Data Storage:** Implemented a file saving system. Map data is stored in `mods/BetterMap/data/"worldname"/"userId"`.
+* **Configuration:** Added `config.json` support located in `mods/BetterMap/`.
 
 **Commands**
 
